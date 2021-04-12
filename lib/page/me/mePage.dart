@@ -72,25 +72,38 @@ class _MePageState extends State<MePage> {
   Widget _getMainUI(BuildContext context) {
     return Expanded(
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Expanded(
-            flex: 2,
-            child: Container(
-              child: MediaQuery.removePadding(
-                  removeTop: true,
-                  context: context,
-                  child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      return _getLeftItem(context, index);
-                    },
-                    itemCount: model.data.length,
-                  )),
-            ),
-          ),
-          Expanded(
-            flex: 5,
-            child: Container(),
-          )
+          model != null
+              ? Expanded(
+                  flex: 2,
+                  child: Container(
+                    padding: EdgeInsets.only(top: 2),
+                    child: MediaQuery.removePadding(
+                        removeTop: true,
+                        context: context,
+                        child: ListView.builder(
+                          itemBuilder: (context, index) {
+                            return _getLeftItem(context, index);
+                          },
+                          itemCount: model.data.length,
+                        )),
+                  ),
+                )
+              : Container(),
+          model != null
+              ? Expanded(
+                  flex: 5,
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                    child: Wrap(
+                      spacing: 10,
+                      runSpacing: 20,
+                      children: _getRightItem(context),
+                    ),
+                  ),
+                )
+              : Container()
         ],
       ),
     );
@@ -105,7 +118,7 @@ class _MePageState extends State<MePage> {
         });
       },
       child: Container(
-        height: 44,
+        height: 50,
         decoration: BoxDecoration(
           color: selectedIndex == index ? Colors.grey[100] : Colors.white,
         ),
@@ -115,7 +128,7 @@ class _MePageState extends State<MePage> {
               offstage: selectedIndex == index ? false : true,
               child: Container(
                 width: 5,
-                height: 44,
+                height: 50,
                 color: Theme.of(context).primaryColor,
               ),
             ),
@@ -136,5 +149,31 @@ class _MePageState extends State<MePage> {
         ),
       ),
     );
+  }
+
+  ///right Item
+  List<Widget> _getRightItem(BuildContext context) {
+    return model.data[selectedIndex].articles.map((el) {
+      return GestureDetector(
+        onTap: () {},
+        child: PhysicalModel(
+          color: Colors.grey[200],
+          clipBehavior: Clip.antiAlias,
+          borderRadius: BorderRadius.circular(20),
+          elevation: 3,
+          shadowColor: Colors.grey[400],
+          child: Container(
+            padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+            child: Text(
+              el.title,
+              style: TextStyle(
+                color: Colors.black87,
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ),
+      );
+    }).toList();
   }
 }
